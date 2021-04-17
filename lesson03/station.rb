@@ -7,7 +7,15 @@ class Station
     @trains = []
   end
 
-  def take_train
-    self.trains << @train
+  def take_train(train)
+    self.trains << train
+  end
+
+  def send_train(train)
+    @trains.delete(train)
+  end
+
+  def trains
+    @trains.each { |train| puts "На станции находятся нижеуказанные поезда: #{train}" }
   end
 end
