@@ -9,7 +9,7 @@ class Route
     unless @stations.include?(station)
       @stations.insert(-2, station)
     else
-      puts "Станция уже есть в маршруте"
+      puts 'Станция уже есть в маршруте'
     end
   end
 
@@ -17,12 +17,12 @@ class Route
     unless station == @stations.first && station == @stations.last
       @stations.delete(station)
     else
-      puts "Нельзя убрать из маршрута начальную и конечную станции"
+      puts 'Нельзя убрать из маршрута начальную и конечную станции'
     end
   end
 
   def show_stations
-    puts "Станции на маршруте:"
+    puts 'Станции на маршруте:'
     @stations.each { |station| puts station.name }
   end
 end

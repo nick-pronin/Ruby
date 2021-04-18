@@ -2,29 +2,27 @@ class Train
   attr_accessor :wagons, :speed
   attr_reader :number, :type
 
-  def initialize(number, wagons) # Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов, эти данные указываются при создании экземпляра класса
+  def initialize(number, wagons)
     @number = number.to_s
-    puts "Выберите тип поезда: passenger или cargo"
+    puts 'Выберите тип поезда: passenger или cargo'
     @type = gets.chomp
     @wagons = wagons.to_i
     @speed = 0
   end
 
-  def increase_speed # Может набирать скорость
+  def increase_speed
     @speed += 5
   end
 
-  def stop_train # Может тормозить (сбрасывать скорость до нуля)
+  def stop_train
     @speed = 0
   end
-
-  # Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает количество вагонов). Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
 
   def attach_wagon
     if @speed == 0
       @wagons += 1
     else
-      puts "Сначала остановите поезд"
+      puts 'Сначала остановите поезд'
     end
   end
 
@@ -32,7 +30,7 @@ class Train
     if @speed == 0 && @wagons > 0
       @wagons -= 1
     else
-      puts "Сначала остановите поезд или проверьте наличие вагонов"
+      puts 'Сначала остановите поезд или проверьте наличие вагонов'
     end
   end
 
@@ -44,5 +42,29 @@ class Train
 
   def current_station
     @route.stations[@current_station]
+  end
+
+  def next_station
+    @route.stations[@current_station + 1]
+  end
+
+  def previous_station
+    @route.stations[@current_station - 1] if @current_station > 0
+  end
+
+  def move_forvard
+    if next_station
+      current_station.send_train(self)
+      next_station.take_train(self)
+      @current_station += 1
+    end
+  end
+
+  def move_backward
+    if previous_station
+      current_station.send_train(self)
+      previous_station.take_train(self)
+      @current_station -= 1
+    end
   end
 end
