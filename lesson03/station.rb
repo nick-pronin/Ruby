@@ -19,6 +19,6 @@ class Station
   end
 
   def show_trains_type(type)
-    @trains.each { |train| puts "#{train}" if train.type == type }
+    @trains.select{ |train| train.type == type }
   end
 end

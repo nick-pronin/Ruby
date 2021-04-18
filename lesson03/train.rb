@@ -4,7 +4,7 @@ class Train
 
   def initialize(number, wagons) # Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов, эти данные указываются при создании экземпляра класса
     @number = number.to_s
-    puts "Выбрите тип поезда: passenger или cargo"
+    puts "Выберите тип поезда: passenger или cargo"
     @type = gets.chomp
     @wagons = wagons.to_i
     @speed = 0
