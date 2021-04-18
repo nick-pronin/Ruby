@@ -35,4 +35,14 @@ class Train
       puts "Сначала остановите поезд или проверьте наличие вагонов"
     end
   end
+
+  def get_route(route)
+    @route = route
+    @current_station = 0
+    current_station.take_train(self)
+  end
+
+  def current_station
+    @route.stations[@current_station]
+  end
 end
