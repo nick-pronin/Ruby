@@ -2,10 +2,10 @@ class Train
   attr_accessor :wagons, :speed
   attr_reader :number, :type
 
-  def initialize(number, wagons)
+  def initialize(number, type, wagons)
     @number = number.to_s
     puts 'Выберите тип поезда: passenger или cargo'
-    @type = gets.chomp
+    @type = type
     @wagons = wagons.to_i
     @speed = 0
   end
