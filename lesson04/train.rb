@@ -16,12 +16,8 @@ class Train
     @speed = 0
   end
 
-  def attach_wagon
-    if @speed == 0
-      @wagons += 1
-    else
-      puts 'Сначала остановите поезд'
-    end
+  def attach_wagon(wagon)
+    @wagons << wagon if @speed == 0
   end
 
   def unhook_wagon
