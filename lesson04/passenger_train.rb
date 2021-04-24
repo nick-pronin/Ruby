@@ -7,6 +7,10 @@ class PassengerTrain < Train
   end
 
   def attach_wagon(wagon)
-    super if wagon.is_a?(PassengerWagon)
+    if wagon.is_a?(PassengerWagon)
+      super
+    else
+      puts 'Выбран неподходящий тип вагона'
+    end
   end
 end
