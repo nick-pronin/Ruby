@@ -21,8 +21,8 @@ class Train
   end
 
   def unhook_wagon
-    if @speed == 0 && @wagons > 0
-      @wagons -= 1
+    if @speed == 0 && @wagons.size > 0
+      @wagons.delete_at(-1)
     else
       puts 'Сначала остановите поезд или проверьте наличие вагонов'
     end

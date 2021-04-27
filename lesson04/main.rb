@@ -47,6 +47,8 @@ class Main
     when 2 then create_train
     when 3 then create_route
     when 4 then assign_route_to_train
+    when 5 then add_wagon_to_train
+    when 6 then remove_wagon_from_train
     when 7 then move_train
     when 9 then show_routes
     end
@@ -168,6 +170,49 @@ class Main
     when 2 then train.move_backward
     end
     puts "Поезд №#{train.number} передвинулся на станцию #{train.current_station.name}"
+  end
+
+  def add_wagon_to_train
+    train = select_train
+    wagon = create_wagon
+
+    train.attach_wagon(wagon)
+    puts "К поезду №#{train.number} добавлен вагон. Количество вагонов равно #{train.wagons.size}"
+  end
+
+  def remove_wagon_from_train
+    train = select_train
+    train.unhook_wagon
+    puts "У поезда №#{train.number} осталось #{train.wagons.size} вагонов"
+  end
+
+  def create_wagon
+    puts 'Выберите тип вагона:'
+    puts '1 - Грузовой'
+    puts '2 - Пассажирский'
+    wagon_type = gets.to_i
+    case wagon_type
+    when 1 then cargo_wagon
+    when 2 then passenger_wagon
+    end
+  end
+
+  def cargo_wagon
+    puts 'Введите массу, высоту, ширину и грузоподъемность:'
+    weight = gets.to_i
+    height = gets.to_i
+    width = gets.to_i
+    capacity = gets.to_i
+    CargoWagon.new(weight, height, width, capacity)
+  end
+
+  def passenger_wagon
+    puts 'Введите массу, высоту, ширину и количество пассажирских мест:'
+    weight = gets.to_i
+    height = gets.to_i
+    width = gets.to_i
+    seats = gets.to_i
+    PassengerWagon.new(weight, height, width, seats)
   end
 
   def select_route
