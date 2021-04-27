@@ -50,6 +50,7 @@ class Main
     when 5 then add_wagon_to_train
     when 6 then remove_wagon_from_train
     when 7 then move_train
+    when 8 then show_station_and_train_on_station
     when 9 then show_routes
     end
   end
@@ -242,6 +243,25 @@ class Main
     puts '1 - Вперёд'
     puts '2 - Назад'
     gets.to_i
+  end
+
+  def show_station_and_train_on_station
+    show_stations
+    index_station = gets.to_i
+    show_train_on_station(index_station - 1)
+  end
+
+  def show_stations
+    puts "Выберите станцию для отображения списка поездов на ней:"
+    @stations.each.with_index(1) do |station, index|
+      puts "#{index} - #{station.name}"
+    end
+  end
+
+  def show_train_on_station(index)
+    @stations[index].trains.each do |train|
+      puts "Номер поезда #{train.number}"
+    end
   end
 
 
