@@ -17,7 +17,7 @@ class Train
   end
 
   def attach_wagon(wagon)
-    @wagons << wagon if @speed == 0
+    self.wagons << wagon if self.type == wagon.type && @speed == 0 
   end
 
   def unhook_wagon

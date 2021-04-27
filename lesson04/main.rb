@@ -8,6 +8,7 @@ require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
 
 class Main
+  attr_reader :trains
 
   def initialize
     puts WELCOME_MENU
@@ -95,11 +96,9 @@ class Main
     train_type = gets.to_i
 
     case train_type
-    when 1 then PassengerTrain
-    when 2 then CargoTrain
+    when 1 then :passenger
+    when 2 then :cargo
     end
-
-    return train_type
   end
 
   def menu_create_route

@@ -1,5 +1,3 @@
-require_relative 'wagon'
-
 class PassengerWagon < Wagon
   attr_reader :seats
 

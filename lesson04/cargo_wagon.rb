@@ -1,5 +1,3 @@
-require_relative 'wagon'
-
 class CargoWagon < Wagon
   attr_reader :capacity
 

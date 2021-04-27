@@ -1,5 +1,3 @@
-require_relative "train"
-
 class PassengerTrain < Train
 
   def initialize(number)
@@ -7,10 +5,6 @@ class PassengerTrain < Train
   end
 
   def attach_wagon(wagon)
-    if wagon.is_a?(PassengerWagon)
-      super
-    else
-      puts 'Выбран неподходящий тип вагона'
-    end
+    super
   end
 end
