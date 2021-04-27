@@ -26,94 +26,190 @@ class Main
     end
   end
 
-private
+  private
 
-def show_menu
-  puts 'Выберите пункт меню, 0 - для выхода:'
-  puts '1 - Создать станцию'
-  puts '2 - Создать поезд'
-  puts '3 - Создать маршрут'
-  puts '4 - Назначить маршрут поезду'
-  puts '5 - Добавить вагоны к поезду'
-  puts '6 - Отцепить вагоны от поезда'
-  puts '7 - Переместить поезд по маршруту'
-  puts '8 - Просмотреть список станций и список поездов на станции'
-end
-
-def user_choice(choice)
-  case choice
-  when 1 then create_station
-  when 2 then create_train
-  end
-end
-
-def create_station
-  loop do
-    puts "Введите название станции или 0 для выхода:"
-    name_station = gets.chomp
-    break if name_station == '0'
-
-    station = Station.new(name_station)
-    @stations << station
-  end
-end
-
-def create_train
-  loop do
-    train_number = get_train_number
-    break if train_number == '0'
-
-    train_type = get_train_type
-
-    return if train_number.nil? || train_type.nil?
-
-    train = Train.new(train_number, train_type)
-    @trains << train
-  end
-end
-
-def get_train_number
-  puts 'Введите номер поезда или 0 для выхода:'
-  train_number = gets.chomp
-  return train_number
-end
-
-def get_train_type
-  puts 'Выберите тип поезда:'
-  puts '1 - Пассажирский'
-  puts '2 - Грузовой'
-  train_type = gets.to_i
-
-  case train_type
-  when 1 then PassengerTrain
-  when 2 then CargoTrain
+  def show_menu
+    puts 'Выберите пункт меню, 0 - для выхода:'
+    puts '1 - Создать станцию'
+    puts '2 - Создать поезд'
+    puts '3 - Создать маршрут'
+    puts '4 - Назначить маршрут поезду'
+    puts '5 - Добавить вагоны к поезду'
+    puts '6 - Отцепить вагоны от поезда'
+    puts '7 - Переместить поезд по маршруту'
+    puts '8 - Просмотреть список станций и список поездов на станции'
+    puts '9 - Посмотреть список маршрутов'
   end
 
-  return train_type
-end
+  def user_choice(choice)
+    case choice
+    when 1 then create_station
+    when 2 then create_train
+    when 3 then create_route
+    when 4 then assign_route_to_train
+    when 7 then move_train
+    when 9 then show_routes
+    end
+  end
 
-CHOOSE_MENU =
-<<~CHOOSE_MENU
-------------------------------------------------------------
-|                                                          |
-|               Привет, дорогой пользователь!              |
-|               Приветствую тебя в ООО "РЖД"               |
-|                                                          |
-------------------------------------------------------------
-CHOOSE_MENU
-.freeze
+  def create_station
+    loop do
+      puts "Введите название станции или 0 для выхода:"
+      name_station = gets.chomp
+      break if name_station == '0'
 
-WELCOME_MENU =
-<<~WELCOME_WORDS
-------------------------------------------------------------
-|                                                          |
-|               Привет, дорогой пользователь!              |
-|               Приветствую тебя в ООО "РЖД"               |
-|                                                          |
-------------------------------------------------------------
-WELCOME_WORDS
-.freeze
+      station = Station.new(name_station)
+      @stations << station
+    end
+  end
 
-end
+  def create_train
+    loop do
+      train_number = get_train_number
+      break if train_number == '0'
 
-Main.new.start
+      train_type = get_train_type
+
+      return if train_number.nil? || train_type.nil?
+
+      train = Train.new(train_number, train_type)
+      puts "Создан поезд под номером #{train.number}"
+      @trains << train
+    end
+  end
+
+  def get_train_number
+    puts 'Введите номер поезда или 0 для выхода:'
+    train_number = gets.chomp
+
+    return train_number
+  end
+
+  def get_train_type
+    puts 'Выберите тип поезда:'
+    puts '1 - Пассажирский'
+    puts '2 - Грузовой'
+    train_type = gets.to_i
+
+    case train_type
+    when 1 then PassengerTrain
+    when 2 then CargoTrain
+    end
+
+    return train_type
+  end
+
+  def menu_create_route
+    loop do
+      show_menu_create_route
+      menu_create_route_choice = gets.to_i
+      case menu_create_route_choice
+      when 1 then create_route
+      when 2 then add_station_to_route
+      when 3 then remove_station_from_route
+      end
+    end
+  end
+
+  def show_menu_create_route
+     puts 'Выберите пункт меню, 0 для выхода'
+     puts '1 - Создать маршрут'
+     puts '2 - Добавить станцию в маршрут'
+     puts '3 - Удалить станцию из маршрута'
+  end
+
+  def create_route
+    first_station = select_first_station
+    last_station = select_last_station
+
+    return if first_station == last_station
+    return if first_station.nil? || last_station.nil?
+
+    @routes << Route.new(first_station, last_station)
+  end
+
+  def select_first_station
+    puts 'Выберите начальную станцию:'
+    select_station
+  end
+
+  def select_last_station
+    puts 'Выберите конечную станцию:'
+    select_station
+  end
+
+  def select_station
+    @stations.each.with_index(1) do |station, index|
+      puts "#{index} - #{station.name}"
+    end
+    station = gets.to_i
+    return if station.zero?
+    @stations[station - 1]
+  end
+
+  def show_routes
+    puts 'Список маршрутов:'
+    routes_list
+  end
+
+  def assign_route_to_train
+    route = select_route
+    train = select_train
+    train.get_route(route)
+    puts "Поезд №#{train.number} находится на маршруте #{route.stations.first.name} - #{route.stations.last.name}(Станция #{route.stations.first.name})"
+  end
+
+  def move_train
+    train = select_train
+    direction = select_direction
+    return if train.nil? || train.route.nil?
+    case direction
+    when 1 then train.move_forvard
+    when 2 then train.move_backward
+    end
+    puts "Поезд №#{train.number} передвинулся на станцию #{train.current_station.name}"
+  end
+
+  def select_route
+    puts 'Выберите маршрут:'
+    routes_list
+    choice_route = gets.to_i
+    @routes[choice_route - 1]
+  end
+
+  def select_train
+    puts 'Выберите поезд'
+    @trains.each.with_index(1) do |train, index|
+      puts "#{index} - #{train.number}"
+    end
+    choice_train = gets.to_i
+    @trains[choice_train - 1]
+  end
+
+  def routes_list
+    @routes.each.with_index(1) do |route, index|
+      puts "#{index}: #{route.stations.first.name} - #{route.stations.last.name}"
+    end
+  end
+
+  def select_direction
+    puts 'Выберите направление:'
+    puts '1 - Вперёд'
+    puts '2 - Назад'
+    gets.to_i
+  end
+
+
+  WELCOME_MENU =
+  <<~WELCOME_WORDS
+  ------------------------------------------------------------
+  |                                                          |
+  |               Приветствую тебя в ООО "РЖД"               |
+  |                                                          |
+  ------------------------------------------------------------
+  WELCOME_WORDS
+  .freeze
+
+  end
+
+  Main.new.start
