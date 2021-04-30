@@ -4,11 +4,18 @@ class Train
   attr_reader :number, :type, :wagons, :speed, :route
   include ManufacturingCompany
 
+  @@trains = {}
+
+  def self.find(number)
+    @@trains[number]
+  end
+
   def initialize(number, type)
     @number = number.to_s
     @type = type
     @wagons = []
     @speed = 0
+    @@trains[number] = self
   end
 
   def increase_speed
