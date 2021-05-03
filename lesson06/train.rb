@@ -7,8 +7,9 @@ class Train
   include InstanceCounter
 
   NUMBER_FORMAT = /^[a-z\d]{3}\-[a-z\d]{2}$/i
-  FORMAT_ERROR = 'Номер не соотвутствует формату'
+  FORMAT_ERROR = 'Номер не соотвутствует формату. Введите номер в правильном формате: XXX(-XX)'
   TRAIN_EXISTS_ERROR = "Поезд с таким номером уже существует"
+  TRAIN_TYPES = %i[cargo passenger].freeze
 
   @@trains = {}
 
@@ -18,8 +19,8 @@ class Train
 
   def initialize(number, type)
     @number = number
-    validate!
     @type = type
+    validate!
     @wagons = []
     @speed = 0
     @@trains[number] = self
@@ -40,11 +41,7 @@ class Train
   end
 
   def unhook_wagon
-    if @speed == 0 && @wagons.size > 0
-      @wagons.delete_at(-1)
-    else
-      puts 'Сначала остановите поезд или проверьте наличие вагонов'
-    end
+    @wagons.delete_at(-1) if @speed == 0 && @wagons.size > 0
   end
 
   def get_route(route)
@@ -82,7 +79,15 @@ class Train
   end
 
   def validate!
-    raise FORMAT_ERROR if @number !~ NUMBER_FORMAT
+
+    if @number !~ NUMBER_FORMAT
+      raise ArgumentError, FORMAT_ERROR
+    end
+
+    unless TRAIN_TYPES.include?(@type)
+      raise ArgumentError, 'Неправильный тип поезда'
+    end
+
     raise TRAIN_EXISTS_ERROR if Train.find(@number)
   end
 end

@@ -1,16 +1,13 @@
 class Station
   attr_reader :trains, :name
 
-  NAME_OF_STATION = /^[a-z]|[а-я]/i
-  #{}/^[а-я]{1}|[a-z]{1}\d{3}[а-я]{2}|[a-z]{2}/i #
-
   @@stations = []
 
   def self.all
     @@stations
   end
 
-  def initialize
+  def initialize(name)
     @name = name.capitalize
     @trains = []
     @@stations << self
@@ -25,7 +22,7 @@ class Station
   end
 
   def show_trains
-    @trains.each { |train| puts "На станции находятся нижеуказанные поезда: #{train}" }
+    @trains.each { |train| puts "#{train}" }
   end
 
   def show_trains_type(type)

@@ -46,7 +46,7 @@ class Main
     case choice
     when 1 then create_station
     when 2 then create_train
-    when 3 then create_route
+    when 3 then menu_create_route
     when 4 then assign_route_to_train
     when 5 then add_wagon_to_train
     when 6 then remove_wagon_from_train
@@ -105,6 +105,7 @@ class Main
     loop do
       show_menu_create_route
       menu_create_route_choice = gets.to_i
+      break if menu_create_route_choice == 0
       case menu_create_route_choice
       when 1 then create_route
       when 2 then add_station_to_route
@@ -128,6 +129,18 @@ class Main
     return if first_station.nil? || last_station.nil?
 
     @routes << Route.new(first_station, last_station)
+  end
+
+  def remove_station_from_route
+    route = select_route
+    station = select_station
+    route.remove_station(station)
+  end
+
+  def add_station_to_route
+    route = select_route
+    station = select_station
+    route.add_station(station)
   end
 
   def select_first_station
