@@ -58,27 +58,37 @@ class Main
 
   def create_station
     loop do
-      puts "Введите название станции или 0 для выхода:"
-      name_station = gets.chomp
-      break if name_station == '0'
+      begin
+        puts "Введите название станции или 0 для выхода:"
+        name_station = gets.chomp
+        break if name_station == '0'
 
-      station = Station.new(name_station)
-      @stations << station
+        station = Station.new(name_station)
+        @stations << station
+      rescue RuntimeError => e
+        puts e.message
+        retry
+      end
     end
   end
 
   def create_train
     loop do
-      train_number = get_train_number
-      break if train_number == '0'
+      begin
+        train_number = get_train_number
+        break if train_number == '0'
 
-      train_type = get_train_type
+        train_type = get_train_type
 
-      return if train_number.nil? || train_type.nil?
+        return if train_number.nil? || train_type.nil?
 
-      train = Train.new(train_number, train_type)
-      puts "Создан поезд под номером #{train.number}"
-      @trains << train
+        train = Train.new(train_number, train_type)
+        puts "Создан поезд под номером #{train.number}"
+        @trains << train
+      rescue RuntimeError => e
+        puts e.message
+        retry
+      end
     end
   end
 
@@ -122,13 +132,18 @@ class Main
   end
 
   def create_route
-    first_station = select_first_station
-    last_station = select_last_station
+    begin
+      first_station = select_first_station
+      last_station = select_last_station
 
-    return if first_station == last_station
-    return if first_station.nil? || last_station.nil?
+      return if first_station == last_station
+      return if first_station.nil? || last_station.nil?
 
-    @routes << Route.new(first_station, last_station)
+      @routes << Route.new(first_station, last_station)
+    rescue RuntimeError => e
+      puts e.message
+      retry
+    end
   end
 
   def remove_station_from_route
