@@ -1,6 +1,7 @@
 require_relative 'train'
 require_relative 'route'
 require_relative 'station'
+require_relative 'validation'
 require_relative 'wagon'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
@@ -57,8 +58,9 @@ class Main
   end
 
   def create_station
+    begin
     loop do
-      begin
+
         puts "Введите название станции или 0 для выхода:"
         name_station = gets.chomp
         break if name_station == '0'
@@ -89,8 +91,15 @@ class Main
         puts e.message
         retry
       end
+      show_success_train_create(train) if train.valid?
     end
+
   end
+
+
+def show_success_train_create(train)
+puts "Поезд номер #{train.number} типа #{train.class} успешно создан"
+end
 
   def get_train_number
     puts 'Введите номер поезда или 0 для выхода:'

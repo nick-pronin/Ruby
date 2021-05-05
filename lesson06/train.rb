@@ -15,18 +15,18 @@ class Train
   @@trains = {}
 
   def self.find(number)
+    # @@trains.find { |train| return train if train.number == number }
     @@trains[number]
   end
 
   def initialize(number, type)
-    @number = number
+    @number = number.to_s
     @type = type
     validate!
     @wagons = []
     @speed = 0
     @@trains[number] = self
     register_instances
-
   end
 
   def increase_speed
@@ -89,6 +89,8 @@ class Train
       raise ArgumentError, 'Неправильный тип поезда'
     end
 
-    raise TRAIN_EXISTS_ERROR if Train.find(@number)
+    if self.class.find(@number)
+      raise ArgumentError, TRAIN_EXISTS_ERROR
+    end
   end
 end
