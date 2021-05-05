@@ -1,5 +1,6 @@
 class Station
   attr_reader :trains, :name
+  include Validation
 
   @@stations = []
 
@@ -9,6 +10,7 @@ class Station
 
   def initialize(name)
     @name = name.capitalize
+    validate!
     @trains = []
     @@stations << self
   end
@@ -27,5 +29,11 @@ class Station
 
   def show_trains_type(type)
     @trains.select{ |train| train.type == type }
+  end
+
+  def validate!
+    raise ArgumentError, 'Название станции не указано' if @name.nil?
+    raise ArgumentError, 'Название станции не может начинаться или заканчиваться пустым значением' if @name[0] || @name[-1] == ' '
+    raise ArgumentError, 'Станция с таким названием уже существует' if self.class.find(@name)
   end
 end

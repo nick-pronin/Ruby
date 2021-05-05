@@ -5,6 +5,7 @@ class Train
   attr_reader :number, :type, :wagons, :speed, :route
   include ManufacturingCompany
   include InstanceCounter
+  include Validation
 
   NUMBER_FORMAT = /^[a-z\d]{3}\-[a-z\d]{2}$/i
   FORMAT_ERROR = 'Номер не соотвутствует формату. Введите номер в правильном формате: XXX(-XX)'
