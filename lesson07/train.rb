@@ -1,5 +1,6 @@
 require_relative 'manufacturing_company'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 class Train
   attr_reader :number, :type, :wagons, :speed, :route
@@ -15,7 +16,6 @@ class Train
   @@trains = {}
 
   def self.find(number)
-    # @@trains.find { |train| return train if train.number == number }
     @@trains[number]
   end
 
