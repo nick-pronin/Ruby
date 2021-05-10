@@ -37,6 +37,9 @@ class Station
 
   def validate!
     raise ArgumentError, 'Название станции не указано' if @name.nil?
-    raise ArgumentError, 'Станция с таким названием уже существует' if self.class.find(@name)
+    
+    if self.class.find(@name)
+      raise ArgumentError, 'Станция с таким названием уже существует'
+    end
   end
 end

@@ -16,6 +16,7 @@ class Main
     @trains = []
     @routes = []
     @stations = []
+    seeds
   end
 
   def start
@@ -28,7 +29,29 @@ class Main
     end
   end
 
-  private
+  def seeds
+    novorosiysk = Station.new('Новороссийск')
+    moscow = Station.new('Москва')
+    krasnodar = Station.new('Краснодар')
+    cargo_train1 = CargoTrain.new('123-ff')
+    passenger_train1 = PassengerTrain.new('246-gg')
+    cargo_wagon1 = CargoWagon.new(1000, 5, 5, 10000)
+    cargo_wagon2 = CargoWagon.new(1200, 6, 6, 10000)
+    passenger_wagon1 = PassengerWagon.new(1000, 5, 5, 100)
+    passenger_wagon2 = PassengerWagon.new(1100, 5, 5, 110)
+    passenger_train1.attach_wagon(passenger_wagon1)
+    passenger_train1.attach_wagon(passenger_wagon2)
+    cargo_train1.attach_wagon(cargo_wagon1)
+    cargo_train1.attach_wagon(cargo_wagon2)
+    novorosiysk.take_train(cargo_train1)
+    novorosiysk.take_train(passenger_train1)
+    route = Route.new(novorosiysk, moscow)
+    @stations.push(novorosiysk, moscow, krasnodar)
+    @trains.push(cargo_train1, passenger_train1)
+    @routes << route
+  end
+
+  protected
 
   def show_menu
     puts 'Выберите пункт меню, 0 - для выхода:'
@@ -57,6 +80,8 @@ class Main
     end
   end
 
+#------------------------Station Methods------------------------
+
   def create_station
     begin
     loop do
@@ -73,6 +98,65 @@ class Main
       end
     end
   end
+
+  def remove_station_from_route
+    route = select_route
+    station = select_station
+    route.remove_station(station)
+  end
+
+  def add_station_to_route
+    route = select_route
+    station = select_station
+    route.add_station(station)
+  end
+
+  def select_first_station
+    puts 'Выберите начальную станцию:'
+    select_station
+  end
+
+  def select_last_station
+    puts 'Выберите конечную станцию:'
+    select_station
+  end
+
+  def select_station
+    @stations[2..-1].each.with_index(1) do |station, index|
+      puts "#{index} - #{station.name}"
+    end
+    station = gets.to_i
+    return if station.zero?
+    @stations[station - 1]
+  end
+
+  def select_direction
+    puts 'Выберите направление:'
+    puts '1 - Вперёд'
+    puts '2 - Назад'
+    gets.to_i
+  end
+
+  def show_station_and_train_on_station
+    show_stations
+    index_station = gets.to_i
+    show_train_on_station(index_station - 1)
+  end
+
+  def show_stations
+    puts "Выберите станцию для отображения списка поездов на ней:"
+    @stations.each.with_index(1) do |station, index|
+      puts "#{index} - #{station.name}"
+    end
+  end
+
+  def show_train_on_station(index)
+    @stations[index].trains.each do |train|
+      puts "Номер поезда #{train.number}"
+    end
+  end
+
+#------------------------Train Methods------------------------
 
   def create_train
     loop do
@@ -118,84 +202,6 @@ end
     when 1 then :passenger
     when 2 then :cargo
     end
-  end
-
-  def menu_create_route
-    loop do
-      show_menu_create_route
-      menu_create_route_choice = gets.to_i
-      break if menu_create_route_choice == 0
-      case menu_create_route_choice
-      when 1 then create_route
-      when 2 then add_station_to_route
-      when 3 then remove_station_from_route
-      end
-    end
-  end
-
-  def show_menu_create_route
-     puts 'Выберите пункт меню, 0 для выхода'
-     puts '1 - Создать маршрут'
-     puts '2 - Добавить станцию в маршрут'
-     puts '3 - Удалить станцию из маршрута'
-  end
-
-  def create_route
-    begin
-      first_station = select_first_station
-      last_station = select_last_station
-
-      return if first_station == last_station
-      return if first_station.nil? || last_station.nil?
-
-      @routes << Route.new(first_station, last_station)
-    rescue RuntimeError => e
-      puts e.message
-      retry
-    end
-  end
-
-  def remove_station_from_route
-    route = select_route
-    station = select_station
-    route.remove_station(station)
-  end
-
-  def add_station_to_route
-    route = select_route
-    station = select_station
-    route.add_station(station)
-  end
-
-  def select_first_station
-    puts 'Выберите начальную станцию:'
-    select_station
-  end
-
-  def select_last_station
-    puts 'Выберите конечную станцию:'
-    select_station
-  end
-
-  def select_station
-    @stations.each.with_index(1) do |station, index|
-      puts "#{index} - #{station.name}"
-    end
-    station = gets.to_i
-    return if station.zero?
-    @stations[station - 1]
-  end
-
-  def show_routes
-    puts 'Список маршрутов:'
-    routes_list
-  end
-
-  def assign_route_to_train
-    route = select_route
-    train = select_train
-    train.get_route(route)
-    puts "Поезд №#{train.number} находится на маршруте #{route.stations.first.name} - #{route.stations.last.name}(Станция #{route.stations.first.name})"
   end
 
   def move_train
@@ -252,13 +258,6 @@ end
     PassengerWagon.new(weight, height, width, seats)
   end
 
-  def select_route
-    puts 'Выберите маршрут:'
-    routes_list
-    choice_route = gets.to_i
-    @routes[choice_route - 1]
-  end
-
   def select_train
     puts 'Выберите поезд'
     @trains.each.with_index(1) do |train, index|
@@ -268,38 +267,67 @@ end
     @trains[choice_train - 1]
   end
 
+##------------------------Route Methods------------------------
+
+  def menu_create_route
+    loop do
+      show_menu_create_route
+      menu_create_route_choice = gets.to_i
+      break if menu_create_route_choice == 0
+      case menu_create_route_choice
+      when 1 then create_route
+      when 2 then add_station_to_route
+      when 3 then remove_station_from_route
+      end
+    end
+  end
+
+  def show_menu_create_route
+     puts 'Выберите пункт меню, 0 для выхода'
+     puts '1 - Создать маршрут'
+     puts '2 - Добавить станцию в маршрут'
+     puts '3 - Удалить станцию из маршрута'
+  end
+
+  def create_route
+    begin
+      first_station = select_first_station
+      last_station = select_last_station
+
+      return if first_station == last_station
+      return if first_station.nil? || last_station.nil?
+
+      @routes << Route.new(first_station, last_station)
+    rescue RuntimeError => e
+      puts e.message
+      retry
+    end
+  end
+
+  def show_routes
+    puts 'Список маршрутов:'
+    routes_list
+  end
+
+  def assign_route_to_train
+    route = select_route
+    train = select_train
+    train.get_route(route)
+    puts "Поезд №#{train.number} находится на маршруте #{route.stations.first.name} - #{route.stations.last.name}(Станция #{route.stations.first.name})"
+  end
+
+  def select_route
+    puts 'Выберите маршрут:'
+    routes_list
+    choice_route = gets.to_i
+    @routes[choice_route - 1]
+  end
+
   def routes_list
     @routes.each.with_index(1) do |route, index|
       puts "#{index}: #{route.stations.first.name} - #{route.stations.last.name}"
     end
   end
-
-  def select_direction
-    puts 'Выберите направление:'
-    puts '1 - Вперёд'
-    puts '2 - Назад'
-    gets.to_i
-  end
-
-  def show_station_and_train_on_station
-    show_stations
-    index_station = gets.to_i
-    show_train_on_station(index_station - 1)
-  end
-
-  def show_stations
-    puts "Выберите станцию для отображения списка поездов на ней:"
-    @stations.each.with_index(1) do |station, index|
-      puts "#{index} - #{station.name}"
-    end
-  end
-
-  def show_train_on_station(index)
-    @stations[index].trains.each do |train|
-      puts "Номер поезда #{train.number}"
-    end
-  end
-
 
   WELCOME_MENU =
   <<~WELCOME_WORDS
