@@ -5,8 +5,8 @@ class PassengerWagon < Wagon
 
   ZERO_ERROR = 'Все места заняты'.freeze
 
-  def initialize (weight, height, width, total_units)
-    super(weight, height, width, total_units, :passenger)
+  def initialize (length = 13870 , height = 4700, width = 3300, total_units)
+    super(length, height, width, total_units, :passenger)
     @seats = total_units.to_i
   end
 

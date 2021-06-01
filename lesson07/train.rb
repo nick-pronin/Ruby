@@ -22,7 +22,7 @@ class Train
   def initialize(number, type)
     @number = number.to_s
     @type = type
-    validate!
+    # validate!
     @wagons = []
     @speed = 0
     @@trains[number] = self
@@ -79,18 +79,7 @@ class Train
     end
   end
 
-  def validate!
-
-    if @number !~ NUMBER_FORMAT
-      raise ArgumentError, FORMAT_ERROR
-    end
-
-    unless TRAIN_TYPES.include?(@type)
-      raise ArgumentError, 'Неправильный тип поезда'
-    end
-
-    if self.class.find(@number)
-      raise ArgumentError, TRAIN_EXISTS_ERROR
-    end
+  def each_wagon
+    @wagons.each { |wagon| yield(wagon) }
   end
 end

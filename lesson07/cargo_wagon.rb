@@ -6,8 +6,8 @@ class CargoWagon < Wagon
   ZERO_ERROR = 'Весь объем занят'.freeze
   OVER_SPACE_ERROR = 'Невозможно заполнить такой объем, выберите меньшее значение'.freeze
 
-  def initialize (weight, height, width, total_units)
-    super(weight, height, width, total_units, :cargo)
+  def initialize (length = 13870 , height = 4700, width = 3300, total_units)
+    super(length, height, width, total_units, :cargo)
     @capacity = total_units.to_i
   end
 end

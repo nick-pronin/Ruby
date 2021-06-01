@@ -1,16 +1,16 @@
 require_relative 'manufacturing_company'
 
 class Wagon
-  attr_reader :weight, :height, :width, :type, :total_units, :occupied_units # :total_units - общее количество, :occupied_units - метод, который возвращает кол-во занятых мест в вагоне
+  attr_reader :length, :height, :width, :type, :total_units, :occupied_units # :total_units - общее количество, :occupied_units - метод, который возвращает кол-во занятых мест в вагоне
   include ManufacturingCompany
 
   ZERO_ERROR = 'Нет свободного пространства'
   OVER_SPACE_ERROR = 'Доступно меньше пространства'
 
-  def initialize(weight, height, width, total_units, type)
-    @weight = weight.to_i
-    @height = height.to_i
-    @width = width.to_i
+  def initialize(length = 13870 , height = 4700, width = 3300, total_units, type)
+    @length = length
+    @height = height
+    @width = width
     @total_units = total_units.to_i
     @type = type
     @occupied_units = 0

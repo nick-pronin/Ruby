@@ -1,11 +1,13 @@
+require_relative 'validation'
+require_relative 'menu'
 class Station
   attr_reader :trains, :name
   include Validation
 
   @@stations = []
 
-  def self.find(name)
-    @@stations.find { |station| return station if station.name == name }
+  def self.find_station(name)
+    @@stations.find { |station| return station if station.name.capitalize == name.capitalize }
   end
 
   def self.all
@@ -35,11 +37,17 @@ class Station
     @trains.select { |train| train.type == type }
   end
 
+  def each_train
+    @trains.each { |train| yield(train) }
+  end
+
   def validate!
     raise ArgumentError, 'Название станции не указано' if @name.nil?
-    
-    if self.class.find(@name)
-      raise ArgumentError, 'Станция с таким названием уже существует'
+
+    if self.class.find_station(@name)
+      raise ArgumentError
     end
+  rescue
+    puts INPUT_AGAIN_MENU
   end
 end
