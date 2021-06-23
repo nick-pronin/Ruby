@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require_relative 'validation'
 require_relative 'menu'
+
 class Station
   attr_reader :trains, :name
+
   include Validation
 
   @@stations = []
@@ -30,7 +34,7 @@ class Station
   end
 
   def show_trains
-    @trains.each { |train| puts "#{train}" }
+    @trains.each { |train| puts train.to_s }
   end
 
   def show_trains_type(type)
@@ -44,10 +48,8 @@ class Station
   def validate!
     raise ArgumentError, 'Название станции не указано' if @name.nil?
 
-    if self.class.find_station(@name)
-      raise ArgumentError
-    end
-  rescue
+    raise ArgumentError if self.class.find_station(@name)
+  rescue ArgumentError
     puts INPUT_AGAIN_MENU
   end
 end

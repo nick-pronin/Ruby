@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require_relative 'wagon'
 
 class CargoWagon < Wagon
-  attr_reader :capacity
-
-  ZERO_ERROR = 'Весь объем занят'.freeze
-  OVER_SPACE_ERROR = 'Невозможно заполнить такой объем, выберите меньшее значение'.freeze
-
-  def initialize (length = 13870 , height = 4700, width = 3300, total_units)
-    super(length, height, width, total_units, :cargo)
-    @capacity = total_units.to_i
+  ZERO_ERROR = 'Весь объем занят'
+  OVER_SPACE_ERROR = 'Невозможно заполнить такой объем, выберите меньшее значение'
+  def initialize(options = {})
+    super(:cargo)
+    @total_units = options[:total_units] || 2000
+    @length = options[:length] || 13_870
+    @height = options[:height] || 4700
+    @width = options[:width] || 3300
   end
 end

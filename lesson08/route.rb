@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Route
   attr_reader :stations, :name
 
@@ -7,19 +9,11 @@ class Route
   end
 
   def add_station(station)
-    unless @stations.include?(station)
-      @stations.insert(-2, station)
-    else
-      puts 'Станция уже есть в маршруте'
-    end
+    @stations.insert(-2, station) unless @stations.include?(station)
   end
 
   def remove_station(station)
-    unless station == @stations.first && station == @stations.last
-      @stations.delete(station)
-    else
-      puts 'Нельзя убрать из маршрута начальную и конечную станции'
-    end
+    @stations.delete(station) unless station == @stations.first && station == @stations.last
   end
 
   def show_stations

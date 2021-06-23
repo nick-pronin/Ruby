@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InstanceCounter
   def self.included(counter)
     counter.extend ClassMethods
@@ -9,9 +11,6 @@ module InstanceCounter
   end
 
   module InstanceMethods
-
-    protected
-    
     def register_instances
       self.class.instances ||= 0
       self.class.instances += 1
